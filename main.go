@@ -7,8 +7,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//type "go run ." and it will use your ip to show the weather in your area.
-//type "go run . your_location" and it will show the weather in that location.
+//type "curl localhost:8080" and it will use your ip to show the weather in your area.
+//type "curl localhost:8080/buenos_aires" and it will show the weather in that location.
 
 func weatherHandler() {
 	newRouter := mux.NewRouter().StrictSlash(true)
@@ -21,7 +21,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	location := vars["loc"]
 	if location == "" {
-        location = "auto:ip"
+		location = "auto:ip"
 	}
 
 	currentWeather, err := getWeather(location)
@@ -30,7 +30,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "text/plain")
 
 	printWeather(w, currentWeather)
 }

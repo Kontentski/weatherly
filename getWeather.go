@@ -15,7 +15,7 @@ func getWeather(location string) (*Weather, error) {
 	url := "https://api.weatherapi.com/v1/forecast.json?key=" + key + "&q=" + location + "&days=1&aqi=no&alerts=no"
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("there is a problem with the url")
 	}
 	defer resp.Body.Close()
 
