@@ -21,49 +21,28 @@ func printWeather(w http.ResponseWriter, current *Weather) {
 		snow := hour.ChanceOfSnow
 		temp := hour.TempC
 		description := hour.Condition.Text
-
+		
+		// Convert time from Unix epoch to readable format and skip hours in the past
 		date := time.Unix(hour.TimeEpoch, 0)
-
+		dateformat := date.Format(time.Kitchen)
 		if date.Before(time.Now()) {
 			continue
 		}
 
-		format := "%s - %.0f⁰C, rain %.0f%%, %s\n"
+		format := ""
 
 		switch {
-		case snow > 0 && temp < 0 && temp >= -9 || snow > 0 && temp >= 0 && temp <= 9:
-			format = "%s -  %.0f⁰C,   1| rain %.0f%%,   snow %.0f%%, | %s\n"
-		case rain >= 0 && temp < 0 && temp >= -9 || rain > 0 && rain < 10 && temp >= 0 && temp <= 9:
-			format = "%s -  %.0f⁰C,  2| rain %.0f%%,  %s\n"
-		case rain >= 0 && rain < 10 && temp >= 0 && temp <= 9:
-			format = "%s -  %.0f⁰C,  3| rain %.0f%%,   | %s\n"
-		case rain >= 0 && rain < 10:
-			format = "%s -  %.0f⁰C,  4| rain %.0f%%,   | %s\n"
-		case rain > 9 && rain < 99:
-			format = "%s -  %.0f⁰C,  5| rain %.0f%%,  | %s\n"
-		case rain >= 100 && temp >= 10:
-			format = "%s -  %.0f⁰C,  7| rain %.0f%%, | %s\n"
-		case rain >= 100 && temp >= 0 && temp <= 9:
-			format = "%s -  %.0f⁰C,   6| rain %.0f%%, | %s\n"
-		default:
-			format = "%s -  %.0f⁰C,   d| rain %.0f%%, | %s\n"
+		case snow > 0:
+			format = "%07s - %3.0f⁰C,  | snow  %3.0f%%, | %s\n"
+		case rain >= 0:
+			format = "%07s - %3.0f⁰C,  | rain  %3.0f%%, | %s\n"
+
+		}
+		if strings.Contains(format, "snow %.0f%%") {
+			fmt.Fprintf(w, format, dateformat, temp, snow, description,)
+		} else {
+			fmt.Fprintf(w, format, dateformat, temp, rain, description,)
 		}
 
-		if strings.Contains(format, "snow %.0f%%") {
-			fmt.Fprintf(w, format,
-				date.Format("15:04"),
-				temp,
-				rain,
-				snow,
-				description,
-			)
-		} else {
-			fmt.Fprintf(w, format,
-				date.Format("15:04"),
-				temp,
-				rain,
-				description,
-			)
-		}
 	}
 }
