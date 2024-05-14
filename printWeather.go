@@ -21,7 +21,7 @@ func printWeather(w http.ResponseWriter, current *Weather) {
 		snow := hour.ChanceOfSnow
 		temp := hour.TempC
 		description := hour.Condition.Text
-		
+
 		// Convert time from Unix epoch to readable format and skip hours in the past
 		date := time.Unix(hour.TimeEpoch, 0)
 		dateformat := date.Format(time.Kitchen)
@@ -39,10 +39,24 @@ func printWeather(w http.ResponseWriter, current *Weather) {
 
 		}
 		if strings.Contains(format, "snow %.0f%%") {
-			fmt.Fprintf(w, format, dateformat, temp, snow, description,)
+			fmt.Fprintf(w, format, dateformat, temp, snow, description)
 		} else {
-			fmt.Fprintf(w, format, dateformat, temp, rain, description,)
+			fmt.Fprintf(w, format, dateformat, temp, rain, description)
 		}
 
 	}
+}
+
+//html template funcs
+
+func unixTimeFormat(unixTime int64) string {
+	return time.Unix(unixTime, 0).Format("15:04")
+}
+
+func unixTimeIsPast(unixTime int64) bool {
+	return time.Unix(unixTime, 0).Before(time.Now())
+}
+
+func intTemp(temp float64) int64 {
+    return int64(temp)
 }
