@@ -30,7 +30,7 @@ weatherly() {
     curl "https://weatherly-4zvrwzl5sq-uc.a.run.app/$1"
 }
 ```
-After adding this function, you can simply call weatherly from your terminal to get the weather information
+After adding this function, you can simply call weatherly from your terminal to get the weather information.
 
 <img width="419" alt="image" src="https://github.com/Kontentski/weatherly/assets/150854976/11b694e1-a8ff-487c-a134-8e66c2fe2f29">
 
@@ -42,6 +42,10 @@ To run Weatherly locally, ensure you have Docker installed. Then, follow these s
   ```bash
   git clone https://github.com/Kontentski/weatherly
   ```
+- **Obtain an API key from [WeatherAPI.com](https://www.weatherapi.com/)**:
+  
+  Sign up for a free account and get your API key.
+  
 - **Build the Docker image**:
   ```bash
   docker build --tag weatherly .
@@ -58,7 +62,7 @@ Contributions are welcome! If you'd like to contribute to the project, please fo
 
 # License
 
-Weatherly is released under the MIT License. See the LICENSE file for more details
+Weatherly is released under the MIT License. See the LICENSE file for more details.
 
 
 
