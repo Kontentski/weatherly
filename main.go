@@ -50,7 +50,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 			"intTemp":        intTemp,
 		})
 
-		tmpl, err := tmpl.ParseFiles("/templates/index.html")
+		tmpl, err := tmpl.ParseFiles("templates/index.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
