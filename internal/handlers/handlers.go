@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"html/template"
@@ -6,18 +6,15 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Kontentski/weatherly/internal/weather"
 	"github.com/gorilla/mux"
 )
 
-//type "curl localhost:8080" and it will use your ip to show the weather in your area.
-//actually if you run localhost it won't use your ip because it is one machine, so the output will be incorrect, use tools like ngrok to catch your ip.
-//type "curl localhost:8080/buenos_aires" and it will show the weather in that location.
-
-func weatherHandler() {
+func New() {
 	newRouter := mux.NewRouter().StrictSlash(true)
 	newRouter.HandleFunc("/{loc}", homepage)
 	newRouter.HandleFunc("/", homepage)
-	newRouter.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
+	newRouter.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("../../public/"))))
 
 	log.Fatal(http.ListenAndServe(":8080", newRouter))
 }
@@ -35,7 +32,7 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		location = clientIP
 	}
 
-	currentWeather, err := getWeather(location)
+	currentWeather, err := weather.Get(location)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,12 +42,11 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 		// Render HTML template
 
 		tmpl := template.New("index.html").Funcs(template.FuncMap{
-			"unixTimeFormat": unixTimeFormat,
-			"unixTimeIsPast": unixTimeIsPast,
-			"intTemp":        intTemp,
+			"UnixTimeIsPast": weather.UnixTimeIsPast,
+			"UnixTimeFormat": weather.UnixTimeFormat,
+			"IntTemp":        weather.IntTemp,
 		})
-
-		tmpl, err := tmpl.ParseFiles("templates/index.html")
+		tmpl, err := tmpl.ParseFiles("../../internal/templates/index.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -64,10 +60,6 @@ func homepage(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Render plain text
 		w.Header().Set("Content-Type", "text/plain")
-		printWeather(w, currentWeather)
+		weather.Print(w, currentWeather)
 	}
-}
-
-func main() {
-	weatherHandler()
 }

@@ -1,4 +1,4 @@
-package main
+package weather
 
 import (
 	"context"
@@ -12,6 +12,7 @@ import (
 	"github.com/go-redis/redis/v8"
 
 	"github.com/Kontentski/weatherly/config"
+	"github.com/Kontentski/weatherly/internal/models"
 )
 
 var (
@@ -22,12 +23,12 @@ var (
 	cacheDuration = 10 * time.Minute // Cache expiration duration
 )
 
-func getWeather(location string) (*Weather, error) {
+func Get(location string) (*models.Weather, error) {
 	cacheKey := fmt.Sprintf("weather:%s", location)
 	cachedData, err := rdb.Get(ctx, cacheKey).Result()
 	if err == redis.Nil {
 		//when there is no cached data
-		weather, err := fetchWeather(location)
+		weather, err := Fetch(location)
 		if err != nil {
 			return nil, err
 		}
@@ -47,7 +48,7 @@ func getWeather(location string) (*Weather, error) {
 
 	log.Println("Cache hit: data retrieved from cache")
 
-	var weather Weather
+	var weather models.Weather
 	if err := json.Unmarshal([]byte(cachedData), &weather); err != nil {
 		return nil, err
 	}
@@ -55,7 +56,7 @@ func getWeather(location string) (*Weather, error) {
 
 }
 
-func fetchWeather(location string) (*Weather, error) {
+func Fetch(location string) (*models.Weather, error) {
 	config.Init()
 	key := config.Config.Key
 	url := "https://api.weatherapi.com/v1/forecast.json?key=" + key + "&q=" + location + "&days=1&aqi=no&alerts=no"
@@ -74,7 +75,7 @@ func fetchWeather(location string) (*Weather, error) {
 		return nil, err
 	}
 
-	var weather Weather
+	var weather models.Weather
 	err = json.Unmarshal(body, &weather)
 	if err != nil {
 		return nil, err

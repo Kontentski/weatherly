@@ -1,13 +1,15 @@
-package main
+package weather
 
 import (
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/Kontentski/weatherly/internal/models"
 )
 
-func printWeather(w http.ResponseWriter, current *Weather) {
+func Print(w http.ResponseWriter, current *models.Weather) {
 	fmt.Fprintf(w,
 		"\nNow - %s, %s, %.0f⁰C, %s\n\n",
 		current.Location.Name,
@@ -49,14 +51,14 @@ func printWeather(w http.ResponseWriter, current *Weather) {
 
 //html template funcs
 
-func unixTimeFormat(unixTime int64) string {
+func UnixTimeFormat(unixTime int64) string {
 	return time.Unix(unixTime, 0).Format("15:04")
 }
 
-func unixTimeIsPast(unixTime int64) bool {
-	return time.Unix(unixTime, 0).Before(time.Now())
+func UnixTimeIsPast(t int64) bool {
+	return time.Now().Unix() > t
 }
 
-func intTemp(temp float64) int64 {
-    return int64(temp)
+func IntTemp(temp float64) int64 {
+	return int64(temp)
 }
