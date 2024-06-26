@@ -13,7 +13,7 @@ Weatherly is a weather API written in Go, designed to provide weather updates di
 
 ## How to Use
 
-You can access the Weatherly API through the following link: [Weatherly API](https://weatherly-4zvrwzl5sq-uc.a.run.app/)
+You can access the Weatherly API through the following link: [Weatherly API](https://weatherly.kontentski.info/)
 
 <img width="617" alt="image" src="https://github.com/Kontentski/weatherly/assets/150854976/2551a213-6b38-4ba5-9285-a5371ac846ae">
 
@@ -22,12 +22,12 @@ You can access the Weatherly API through the following link: [Weatherly API](htt
 To fetch weather information from your terminal, you can use `curl`:
 
 ```bash
-curl https://weatherly-4zvrwzl5sq-uc.a.run.app/
+curl https://weatherly.kontentski.info/
 ```
 For ease of use, you can add the following function to your shell profile (e.g., .bashrc or .zshrc):
 ```
 weatherly() {
-    curl "https://weatherly-4zvrwzl5sq-uc.a.run.app/$1"
+    curl "https://weatherly.kontentski.info/$1"
 }
 ```
 After adding this function, you can simply call weatherly from your terminal to get the weather information.
