@@ -2,8 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/public/" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/public/" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/public/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/public/favicon-32x32.png"
+    />
     <link
       rel="icon"
       type="image/png"
@@ -44,6 +53,15 @@
       th {
         background-color: #aebcc237;
       }
+      @media only screen and (max-width: 600px) {
+        .container {
+          padding: 10px;
+        }
+
+        table {
+          font-size: 14px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -63,11 +81,11 @@
           <th>Rain</th>
           <th>Description</th>
         </tr>
-        {{range .Forecast.Forecastday}} {{range .Hour}} {{if not (unixTimeIsPast
+        {{range .Forecast.Forecastday}} {{range .Hour}} {{if not (UnixTimeIsPast
         .TimeEpoch)}}
         <tr>
-          <td>{{.TimeEpoch | unixTimeFormat}}</td>
-          <td>{{.TempC | intTemp}}°C</td>
+          <td>{{.TimeEpoch | UnixTimeFormat}}</td>
+          <td>{{.TempC | IntTemp}}°C</td>
           <td>{{.ChanceOfRain}}%</td>
           <td>{{.Condition.Text}}</td>
         </tr>
